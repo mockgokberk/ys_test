@@ -43,3 +43,13 @@ Then
         "quantity":"1",
         "status": "preparing"
     }'
+
+
+    2- Order statuses can be accessed and filtered via
+    order endpoint + status parameter for the sake of simplicity i 
+    added 10 seconds of delay to process order. a couple post using 
+    postman will give enough delay to check order endpoints and statuses.
+
+
+    3. Also added management command to sub redis for fun purposes :) 
+    Decided to go with separate script. 
