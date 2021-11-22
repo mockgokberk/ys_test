@@ -60,12 +60,14 @@ class OrdersApiTestCase(TestCase):
             "status": "preparing"
         }, format='json')
 
-        self.assertEqual(r.status_code, 201)
+        self.assertEqual(r.status_code, 400)
 
     def test_order_get(self):
         r = self.factory.get('/api/v1/order/', format='json')
         self.assertEqual(r.status_code, 200)
+
 class RedisTestCase(TestCase):
+
     def test_redis(self):
         con = RedisClient().get_client()
         self.assertIsInstance(con,redis.client.Redis)

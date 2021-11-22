@@ -6,7 +6,7 @@ from orders.models import Order
 class SendOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ["user","address","order","quantity","status"]
+        fields = ["id","user","address","order","quantity","status"]
 
 
 
@@ -18,6 +18,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data):
         validated = {
+            "id": data.get('id'),
             'user_id': data.get('user'),
             'address': data.get('address'),
             'order_id': data.get('order'),
@@ -30,6 +31,6 @@ class OrderSerializer(serializers.ModelSerializer):
 class ListOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ["user","address","order","quantity","status"]
+        fields = ["user","address","order","quantity","status","created_at"]
 
 

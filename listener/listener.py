@@ -14,11 +14,12 @@ class SendOrders():
     while True:
         message = p.get_message()
         if message and not message['data'] == 1:
-            data = message['data'].decode('utf-8')
+            data = json.loads(message['data'].decode('utf-8'))
             try:
-                r = requests.post("http://app:8000/api/v1/order/", data=json.loads(data))
-            except (urllib3.exceptions.NewConnectionError, requests.exceptions.ConnectionError) as e :
                 time.sleep(10)
-                r = requests.post("http://app:8000/api/v1/order/",
-                                  data=json.loads(data))
+                r = requests.post("http://app:8000/api/v1/order/", data=data)
+            except (urllib3.exceptions.NewConnectionError,
+                    requests.exceptions.ConnectionError) as e :
+                time.sleep(10)
+                r = requests.put("http://app:8000/api/v1/order/", data=data)
 

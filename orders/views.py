@@ -1,3 +1,5 @@
+import time
+
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -15,7 +17,9 @@ class SendOrderViewSet(viewsets.ModelViewSet):
     def create(self, request, format=None):
         serializer = SendOrderSerializer(data=request.data)
         if serializer.is_valid():
+            serializer.save()
             RedisClient().publish_data_on_redis(serializer.data, "orders")
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -32,8 +36,13 @@ class OrderViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, format=None):
-        serializer = ListOrderSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            pre_order = Order.objects.get(id=request.data.get('id'))
+            pre_order.status = "processed"
+            pre_order.save()
+        except Order.DoesNotExist as e:
+            return Response({"Error": "Order does not exist"},
+                            status=status.HTTP_400_BAD_REQUEST)
+        return Response({"Success": "Order updated"}, status=status.HTTP_201_CREATED)
+
