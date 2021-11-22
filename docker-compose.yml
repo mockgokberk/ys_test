@@ -13,7 +13,8 @@ services:
   app:
     build: .
     command: >
-      sh -c "python manage.py migrate &&
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
              python manage.py model_datas &&
              python manage.py test &&
              python manage.py runserver 0.0.0.0:8000"
